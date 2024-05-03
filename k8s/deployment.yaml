@@ -1,32 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: conversao-temperatura
+  name: conversaotemperatura
 spec:
-  replicas: 2
+  replicas: 5
   selector:
     matchLabels:
-      app: conversao-temperatura
+      app: conversaotemperatura
   template:
     metadata:
       labels:
-        app: conversao-temperatura
+        app: conversaotemperatura
     spec:
       containers:
-      - name: conversao-temperatura
-        image: fabricioveronez/conversao-temperatura
-        ports:
-        - containerPort: 8080
+        - name: conversao
+          image: genser51/conversao-temperatura:v1
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
 ---
+
 apiVersion: v1
 kind: Service
 metadata:
-  name: conversao-temperatura
+  name: conversaotemperatura
 spec:
   selector:
-    app: conversao-temperatura
+    app: conversaotemperatura
+  type: NodePort
   ports:
-  - port: 80
-    targetPort: 8080
-  type: LoadBalancer
-
+    - name: http
+      port: 80
+      targetPort: 8080
+      protocol: TCP
+      nodePort: 30000
